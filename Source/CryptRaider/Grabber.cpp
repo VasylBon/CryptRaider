@@ -1,8 +1,10 @@
+// Fill out your copyright notice in the Description page of Project Settings.
+
+
 #include "Grabber.h"
 
 #include "Engine/World.h"
 #include "DrawDebugHelpers.h"
-#include "PhysicsEngine/PhysicsHandleComponent.h"
 
 // Sets default values for this component's properties
 UGrabber::UGrabber()
@@ -20,15 +22,8 @@ void UGrabber::BeginPlay()
 {
 	Super::BeginPlay();
 
-	UPhysicsHandleComponent* PhysicsHandle = GetOwner()->FindComponentByClass<UPhysicsHandleComponent>();
-	if (PhysicsHandle != nullptr)
-	{
-		UE_LOG(LogTemp, Display, TEXT("Got Physics Handle: %s"), *PhysicsHandle->GetName());
-	}
-	else
-	{
-		UE_LOG(LogTemp, Warning, TEXT("No Physics Handle Found!"));
-	}
+	// ...
+
 }
 
 
@@ -37,37 +32,26 @@ void UGrabber::TickComponent(float DeltaTime, ELevelTick TickType, FActorCompone
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
-}
-
-void UGrabber::Grab()
-{
 	FVector Start = GetComponentLocation();
 	FVector End = Start + GetForwardVector() * MaxGrabDistance;
 	DrawDebugLine(GetWorld(), Start, End, FColor::Red);
-	DrawDebugSphere(GetWorld(), End, 10, 10, FColor::Blue, false, 5);
 
-	FCollisionShape Sphere = FCollisionShape::MakeSphere(GrabRadius);
-	FHitResult HitResult;
-	bool HasHit = GetWorld()->SweepSingleByChannel(
-		HitResult,
-		Start, End,
-		FQuat::Identity,
-		ECC_GameTraceChannel2,
-		Sphere);
-	if (HasHit)
+	float Damage;
+	if (HasDamage(Damage))
 	{
-		DrawDebugSphere(GetWorld(), HitResult.Location, 10, 10, FColor::Green, false, 5);
-		DrawDebugSphere(GetWorld(), HitResult.ImpactPoint, 10, 10, FColor::Red, false, 5);
-		AActor* HitActor = HitResult.GetActor();
-		UE_LOG(LogTemp, Display, TEXT("Hit actor: %s"), *HitActor->GetActorNameOrLabel());
-	}
-	else
-	{
-		UE_LOG(LogTemp, Display, TEXT("No actor hit"));
+		PrintDamage(Damage);
 	}
 }
 
-void UGrabber::Release()
+void UGrabber::PrintDamage(const float& Damage)
 {
-	UE_LOG(LogTemp, Display, TEXT("Released grabber"));
+	//Damage = 2;
+	UE_LOG(LogTemp, Display, TEXT("Damage: %f"), Damage);
 }
+
+bool UGrabber::HasDamage(float& OutDamage)
+{
+	OutDamage = 5;
+	return true;
+}
+
