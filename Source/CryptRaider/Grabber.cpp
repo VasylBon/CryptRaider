@@ -23,8 +23,6 @@ void UGrabber::BeginPlay()
 {
 	Super::BeginPlay();
 
-	UPhysicsHandleComponent* PhysicsHandle = GetPhysicsHandle();
-
 }
 
 
