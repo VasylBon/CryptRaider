@@ -1,5 +1,6 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
+#include "GameFramework/Actor.h"
 #include "TriggerComponent.h"
 
 UTriggerComponent::UTriggerComponent()
@@ -17,8 +18,21 @@ void UTriggerComponent::TickComponent(float DeltaTime, ELevelTick TickType, FAct
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
-	if (GetAcceptableActor() != nullptr)
+	if (Mover == nullptr)
 	{
+		return;
+	}
+
+	AActor* Actor = GetAcceptableActor();
+	if (Actor != nullptr)
+	{
+		UPrimitiveComponent* Component = Cast<UPrimitiveComponent>(Actor->GetRootComponent());
+		if (Component != nullptr)
+		{
+
+			Component->SetSimulatePhysics(false);
+		}
+		Actor->AttachToComponent(this, FAttachmentTransformRules::KeepWorldTransform);
 		Mover->SetShouldMove(true);
 	}
 	else
