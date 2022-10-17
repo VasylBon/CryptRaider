@@ -19,12 +19,17 @@ void UTriggerComponent::TickComponent(float DeltaTime, ELevelTick TickType, FAct
 
 	if (GetAcceptableActor() != nullptr)
 	{
-		UE_LOG(LogTemp, Display, TEXT("Unlocked!"));
+		Mover->SetShouldMove(true);
 	}
 	else
 	{
-		UE_LOG(LogTemp, Display, TEXT("Locked!"));
+		Mover->SetShouldMove(false);
 	}
+}
+
+void UTriggerComponent::SetMover(UMover* NewMover)
+{
+	Mover = NewMover;
 }
 
 AActor* UTriggerComponent::GetAcceptableActor() const
